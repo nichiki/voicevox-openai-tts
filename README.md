@@ -1,6 +1,17 @@
+<div align="center">
+
+![Image](https://github.com/user-attachments/assets/e47df212-9f09-4c43-8a66-ced8e1b1fb7c)
+
 # 🎤 VOICEVOX OpenAI TTS API
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Python](https://img.shields.io/badge/Python-3.9%2B-blue)](https://www.python.org/)
+[![Docker](https://img.shields.io/badge/Docker-Supported-blue)](https://www.docker.com/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.68%2B-009688)](https://fastapi.tiangolo.com/)
+
 VOICEVOXエンジンをOpenAIの音声合成APIフォーマットに変換するためのAPIサーバーです。
+
+</div>
 
 ## 🌟 特徴
 
