@@ -1,0 +1,48 @@
+version: '3'
+services:
+  voicevox_engine:
+    # Official VOICEVOX Engine Docker image (CPU version)
+    image: voicevox/voicevox_engine:cpu-ubuntu20.04-latest
+    ports:
+      - '50021:50021'
+    tty: true
+    # Container management
+    restart: unless-stopped
+    # Resource limits to prevent excessive CPU usage
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 4G
+        reservations:
+          memory: 2G
+    # Health monitoring
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:50021/docs"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  openai_tts_api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      - VOICEVOX_ENGINE_URL=http://voicevox_engine:50021
+    depends_on:
+      - voicevox_engine
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 2G
+        reservations:
+          memory: 512M
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/docs"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
