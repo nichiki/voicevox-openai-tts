@@ -7,4 +7,5 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY voicevox_tts_api/ .
 
-CMD ["uvicorn", "tts_api:app", "--host", "0.0.0.0", "--port", "8000"]
+# 新しいエントリーポイントを指定
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
