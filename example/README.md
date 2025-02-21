@@ -17,7 +17,17 @@ docker-compose up -d
 
 ## 📝 使用方法
 
-サンプルスクリプトを実行：
+### シンプルな実装
+基本的な機能を試す場合：
+```bash
+python simple_tts_example.py
+```
+
+このスクリプトは基本的な音声合成のみを実行し、output/simple_test.mp3に保存します。
+コードはシンプルで理解しやすく、ログ出力機能も備えています。
+
+### 詳細な実装
+複数のテストケースを実行する場合：
 ```bash
 python tts_example.py
 ```
@@ -31,7 +41,13 @@ python tts_example.py
 
 ## 🎯 カスタマイズ
 
-`tts_example.py`の`test_cases`配列を編集することで、異なるテキストや設定でテストを行うことができます。
+### シンプルな実装（simple_tts_example.py）
+以下の変数を編集することで、基本的な設定を変更できます：
+- `text`: 読み上げるテキスト
+- `voice_id`: VOICEVOXの話者ID（1, 2, 3, ...）
+
+### 詳細な実装（tts_example.py）
+`test_cases`配列を編集することで、異なるテキストや設定でテストを行うことができます。
 
 設定可能なパラメータ：
 - `text`: 読み上げるテキスト
