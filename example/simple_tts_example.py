@@ -9,7 +9,7 @@ def main():
     シンプルな音声合成のサンプルスクリプト
     """
     # カスタムベースURLを持つOpenAIクライアントを作成
-    client = OpenAI(base_url="http://localhost:8000", api_key="sk-1234")
+    client = OpenAI(base_url="http://localhost:8000/v1", api_key="sk-1234")
     
     # 音声合成のリクエストパラメータを設定
     text = "こんにちは。VOICEVOXのOpenAI TTSフォーマットのテストです。"
