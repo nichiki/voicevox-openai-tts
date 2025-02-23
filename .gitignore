@@ -39,3 +39,4 @@ example/output/
 
 # Logs
 *.log
+output/
