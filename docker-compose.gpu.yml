@@ -1,0 +1,47 @@
+version: '3.8'
+services:
+  voicevox_engine:
+    # VOICEVOX Engine Docker image (GPU version)
+    image: voicevox/voicevox_engine:nvidia-latest
+    ports:
+      - '50021:50021'
+    tty: true
+    # Enable GPU support
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    restart: unless-stopped
+    # Health monitoring
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:50021/docs"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  openai_tts_api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      - VOICEVOX_ENGINE_URL=http://voicevox_engine:50021
+    depends_on:
+      - voicevox_engine
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 4G
+        reservations:
+          memory: 1G
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/docs"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
