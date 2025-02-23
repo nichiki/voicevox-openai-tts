@@ -13,7 +13,7 @@ def main():
     
     # 音声合成のリクエストパラメータを設定
     text = "こんにちは。VOICEVOXのOpenAI TTSフォーマットのテストです。"
-    voice_id = "1"  # VOICEVOXの話者ID
+    voice_id = "alloy"  # VOICEVOXの話者ID
     
     logger.info("音声合成を開始します")
     logger.debug(f"テキスト: {text}")
