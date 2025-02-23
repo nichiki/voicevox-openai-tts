@@ -1,8 +1,47 @@
 from fastapi import APIRouter, HTTPException, Response
 import requests
+import json
+import os
 from ..schemas.speech import SpeechRequest
 
 router = APIRouter()
+
+# voice_mappings.jsonの読み込み
+VOICE_MAPPINGS_PATH = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'voice_mappings.json')
+
+def load_voice_mappings():
+    """音声IDマッピングを読み込む"""
+    try:
+        with open(VOICE_MAPPINGS_PATH, 'r') as f:
+            return json.load(f)
+    except Exception as e:
+        print(f"Warning: Failed to load voice mappings: {e}")
+        return {}
+
+def get_speaker_id(voice: str) -> int:
+    """
+    音声名またはIDからスピーカーIDを取得
+    
+    Args:
+        voice: 音声名または音声ID
+        
+    Returns:
+        int: スピーカーID
+    """
+    mappings = load_voice_mappings()
+    
+    # マッピングに存在する場合はマッピングされたIDを返す
+    if voice in mappings:
+        return int(mappings[voice])
+    
+    # 直接数値が指定された場合はそのまま返す
+    try:
+        return int(voice)
+    except ValueError:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Invalid voice: {voice}. Available voices: {', '.join(mappings.keys())}"
+        )
 
 @router.post("/v1/audio/speech", summary="テキストを音声に変換")
 async def create_speech(request: SpeechRequest):
@@ -24,7 +63,7 @@ async def create_speech(request: SpeechRequest):
     synthesis_url = f"{voicevox_url}/synthesis"
 
     # スピーカーIDを取得（voiceパラメータから）
-    speaker_id = int(request.voice)
+    speaker_id = get_speaker_id(request.voice)
 
     try:
         # VOICEVOXのクエリを作成
