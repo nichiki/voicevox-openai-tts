@@ -17,6 +17,7 @@ VOICEVOXエンジンをOpenAIの音声合成APIフォーマットに変換する
 
 - OpenAIのTTS APIと同じフォーマットでリクエストを受け付け
 - VOICEVOXエンジンを使用した高品質な日本語音声合成
+- AivisSpeechエンジンにも対応
 - Dockerで簡単にデプロイ可能
 
 ## 🚀 使用方法
@@ -24,7 +25,17 @@ VOICEVOXエンジンをOpenAIの音声合成APIフォーマットに変換する
 ### 🐳 起動方法
 
 ```bash
+# VOICEVOX（CPU）
 docker-compose up -d
+
+# VOICEVOX（GPU）
+docker compose -f docker-compose.gpu.yml up -d
+
+# AivisSpeech（Docker実行）
+docker compose -f docker-compose.aivis-speech.yml up -d
+
+# AivisSpeech（ローカル実行中のAPIに接続）
+docker compose -f docker-compose.aivis-speech-api-only.yml up -d
 ```
 
 ### 📝 APIエンドポイント
@@ -83,8 +94,14 @@ with response.with_streaming_response.stream_to_file("output.mp3"):
 
 ```
 .
-├── docker-compose.yml    # Docker構成ファイル
+├── docker-compose.yml                        # VOICEVOX CPU版
+├── docker-compose.gpu.yml                    # VOICEVOX GPU版
+├── docker-compose.aivis-speech.yml           # AivisSpeech Docker版
+├── docker-compose.aivis-speech-api-only.yml  # AivisSpeech（ローカル実行）用APIブリッジ
 ├── Dockerfile           # APIサーバーのビルド設定
+├── voice_mappings/      # 各エンジン用の話者IDマッピング
+│   ├── voicevox.json
+│   └── aivis-speech.json
 ├── voicevox_tts_api/   # OpenAI互換APIの実装
 │   ├── tts_api.py      # メインAPIコード
 │   └── requirements.txt # Python依存パッケージ
@@ -113,7 +130,8 @@ HTTP Request (OpenAI Format) ──▶  │  TTS API    │
                                          │
                                          ▼
                                   ┌─────────────┐
-                                  │  VOICEVOX   │
+                                  │  VOICEVOX / │
+                                  │ AivisSpeech │
                                   │   Engine    │
                                   └─────────────┘
 ```

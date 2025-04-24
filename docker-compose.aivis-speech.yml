@@ -1,23 +1,24 @@
-version: '3.8'
+version: '3'
 services:
   voicevox_engine:
-    # VOICEVOX Engine Docker image (GPU version)
-    image: voicevox/voicevox_engine:nvidia-latest
+    # Official AivisSpeech Engine Docker image (CPU version)
+    image: ghcr.io/aivis-project/aivisspeech-engine:cpu-latest
     ports:
-      - '50021:50021'
+      - '10101:10101'
     tty: true
-    # Enable GPU support
+    # Container management
+    restart: unless-stopped
+    # Resource limits to prevent excessive CPU usage
     deploy:
       resources:
+        limits:
+          cpus: '2.0'
+          memory: 4G
         reservations:
-          devices:
-            - driver: nvidia
-              count: 1
-              capabilities: [gpu]
-    restart: unless-stopped
+          memory: 2G
     # Health monitoring
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:50021/docs"]
+      test: ["CMD", "curl", "-f", "http://localhost:10101/docs"]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -29,19 +30,19 @@ services:
     ports:
       - "8000:8000"
     environment:
-      - VOICEVOX_ENGINE_URL=http://voicevox_engine:50021
+      - VOICEVOX_ENGINE_URL=http://voicevox_engine:10101
     depends_on:
       - voicevox_engine
     restart: unless-stopped
     volumes:
-      - ./voice_mappings/voicevox.json:/app/voice_mappings.json
+      - ./voice_mappings/aivis-speech.json:/app/voice_mappings.json
     deploy:
       resources:
         limits:
-          cpus: '2.0'
-          memory: 4G
+          cpus: '1.0'
+          memory: 2G
         reservations:
-          memory: 1G
+          memory: 512M
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000/docs"]
       interval: 30s

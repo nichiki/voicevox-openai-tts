@@ -1,3 +1,5 @@
+from pathlib import Path
+
 from openai import OpenAI
 from loguru import logger
 import sys
@@ -28,7 +30,8 @@ def main():
         )
 
         # 音声ファイルを保存
-        output_file = "output/simple_test.mp3"
+        output_file = Path("output/simple_test.mp3")
+        output_file.parent.mkdir(exist_ok=True)
         with open(output_file, "wb") as file:
             file.write(response.content)
             

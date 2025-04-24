@@ -1,0 +1,25 @@
+version: '3'
+services:
+  openai_tts_api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      - VOICEVOX_ENGINE_URL=http://host.docker.internal:10101
+    restart: unless-stopped
+    volumes:
+      - ./voice_mappings/aivis-speech.json:/app/voice_mappings.json
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 2G
+        reservations:
+          memory: 512M
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/docs"]
+      interval: 30s
+      timeout: 10s
+      retries: 3

@@ -7,7 +7,8 @@ from ..schemas.speech import SpeechRequest
 router = APIRouter()
 
 # voice_mappings.jsonの読み込み
-VOICE_MAPPINGS_PATH = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'voice_mappings.json')
+DEFAULT_MAPPING_PATH = "/app/voice_mappings.json"
+VOICE_MAPPINGS_PATH = os.getenv("VOICE_MAPPINGS_PATH", DEFAULT_MAPPING_PATH)
 
 def load_voice_mappings():
     """音声IDマッピングを読み込む"""
@@ -58,7 +59,7 @@ async def create_speech(request: SpeechRequest):
         HTTPException: VOICEVOXエンジンとの通信に失敗した場合
     """
     # VOICEVOXのAPIエンドポイント
-    voicevox_url = "http://voicevox_engine:50021"
+    voicevox_url = os.getenv("VOICEVOX_ENGINE_URL", "http://voicevox_engine:50021")
     audio_query_url = f"{voicevox_url}/audio_query"
     synthesis_url = f"{voicevox_url}/synthesis"
 
